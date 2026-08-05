@@ -1,0 +1,6 @@
+{
+  "name": "FlowGen Viewbot & Hype Detector",
+  "description": "Algorithmic audit and real-time mitigation dashboard for livestream viewbotting, concurrent viewer authentication ratios, and high-pressure marketing hype fraud.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
