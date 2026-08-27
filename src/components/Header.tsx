@@ -1,16 +1,22 @@
 import React, { useState } from 'react';
-import { Shield, Activity, AlertTriangle, Volume2, VolumeX, FileJson, Store, HelpCircle, Lock, ShieldCheck, Bot } from 'lucide-react';
-import { Channel, AuditLog, ThresholdSettings, UserRole } from '../types';
+import { Shield, Activity, AlertTriangle, Volume2, VolumeX, FileJson, Store, HelpCircle, Lock, ShieldCheck, Bot, Sun, Moon, Sparkles, HeartHandshake, FileSpreadsheet, Share2, Check, ExternalLink, Database } from 'lucide-react';
+import { Channel, AuditLog, ThresholdSettings, UserRole, ThemeMode } from '../types';
 import { setAudioMuted, getAudioMuted, playCriticalStatusSound } from '../utils/sound';
 
 interface HeaderProps {
   channels: Channel[];
   auditLogs?: AuditLog[];
   thresholdSettings?: ThresholdSettings;
+  theme?: ThemeMode;
+  onToggleTheme?: () => void;
   onOpenMarketplaceModal?: () => void;
   onOpenSystemsGuide?: () => void;
   onOpenSecurityGovernance?: () => void;
   onOpenMicrosoftCopilot?: () => void;
+  onOpenSoloMarketing?: () => void;
+  onOpenGoogleSheetsStandard?: () => void;
+  onOpenShareModal?: () => void;
+  onOpenFirebaseModal?: () => void;
   userRole?: UserRole;
 }
 
@@ -18,14 +24,32 @@ export function Header({
   channels,
   auditLogs,
   thresholdSettings,
+  theme = 'dark',
+  onToggleTheme,
   onOpenMarketplaceModal,
   onOpenSystemsGuide,
   onOpenSecurityGovernance,
   onOpenMicrosoftCopilot,
+  onOpenSoloMarketing,
+  onOpenGoogleSheetsStandard,
+  onOpenShareModal,
+  onOpenFirebaseModal,
   userRole = 'admin',
 }: HeaderProps) {
   const [isMuted, setIsMuted] = useState<boolean>(getAudioMuted());
   const [isExported, setIsExported] = useState<boolean>(false);
+  const [isLinkCopied, setIsLinkCopied] = useState<boolean>(false);
+
+  const handleCopyShareLink = () => {
+    const shareUrl = window.location.href;
+    navigator.clipboard.writeText(shareUrl).then(() => {
+      setIsLinkCopied(true);
+      setTimeout(() => setIsLinkCopied(false), 2500);
+    }).catch(() => {
+      setIsLinkCopied(true);
+      setTimeout(() => setIsLinkCopied(false), 2500);
+    });
+  };
 
   const handleToggleMute = () => {
     const nextMuted = !isMuted;
@@ -158,6 +182,39 @@ export function Header({
               <span>CONNECT MARKETPLACE</span>
             </button>
 
+            {/* Solo Creator Marketing & Buyer Connection Copilot */}
+            <button
+              id="btn-header-solo-marketing"
+              onClick={onOpenSoloMarketing}
+              className="flex items-center gap-1.5 px-3 py-1 rounded border text-[9px] font-mono font-black uppercase tracking-wider transition-all cursor-pointer bg-gradient-to-r from-amber-500/20 to-orange-500/20 hover:from-amber-500/30 hover:to-orange-500/30 text-amber-300 border-amber-500/40 hover:border-amber-400 shadow-[0_0_15px_rgba(245,158,11,0.2)]"
+              title="Open Solo Creator Marketing Copilot (Generate genuine buyer follow-ups, chat icebreakers & conversion scripts)"
+            >
+              <HeartHandshake className="w-3.5 h-3.5 text-amber-400" />
+              <span>SOLO MARKETING COPILOT</span>
+            </button>
+
+            {/* Google Sheets & AI Studio Standard Data Ingestion Hub */}
+            <button
+              id="btn-header-google-sheets-standard"
+              onClick={onOpenGoogleSheetsStandard}
+              className="flex items-center gap-1.5 px-3 py-1 rounded border text-[9px] font-mono font-black uppercase tracking-wider transition-all cursor-pointer bg-emerald-950/40 hover:bg-emerald-900/60 text-emerald-300 border-emerald-500/40 hover:border-emerald-400 shadow-sm"
+              title="Open Google Sheets & AI Studio Standard Hub (Col A-F Schema, Gemini Hype Calculation, Apps Script)"
+            >
+              <FileSpreadsheet className="w-3.5 h-3.5 text-emerald-400" />
+              <span>GOOGLE SHEETS & AI STUDIO</span>
+            </button>
+
+            {/* Firebase Firestore & Auth Cloud Hub */}
+            <button
+              id="btn-header-firebase-hub"
+              onClick={onOpenFirebaseModal}
+              className="flex items-center gap-1.5 px-3 py-1 rounded border text-[9px] font-mono font-black uppercase tracking-wider transition-all cursor-pointer bg-gradient-to-r from-amber-500/15 to-orange-500/15 hover:from-amber-500/25 hover:to-orange-500/25 text-amber-400 border-amber-500/40 hover:border-amber-400 shadow-[0_0_15px_rgba(245,158,11,0.15)]"
+              title="Open Firebase Cloud Hub (Google Auth, Cloud Firestore Sync, Billing Project ID info)"
+            >
+              <Database className="w-3.5 h-3.5 text-amber-400 animate-pulse" />
+              <span>FIREBASE CLOUD</span>
+            </button>
+
             {/* Microsoft Copilot Agent & Tasks Hookup Modal Trigger */}
             <button
               id="btn-header-microsoft-copilot"
@@ -167,6 +224,24 @@ export function Header({
             >
               <Bot className="w-3.5 h-3.5 text-[#0078D4] animate-pulse" />
               <span>MS COPILOT AGENT</span>
+            </button>
+
+            {/* Share App Link Button with Modal & 1-Click Copy */}
+            <button
+              id="btn-header-share-app-link"
+              onClick={() => {
+                handleCopyShareLink();
+                if (onOpenShareModal) onOpenShareModal();
+              }}
+              className={`flex items-center gap-1.5 px-3 py-1 rounded border text-[9px] font-mono font-black uppercase tracking-wider transition-all cursor-pointer shadow-sm ${
+                isLinkCopied
+                  ? 'bg-emerald-400 text-black border-emerald-400 font-black scale-105'
+                  : 'bg-gradient-to-r from-purple-950/60 to-indigo-950/60 hover:from-purple-900/80 hover:to-indigo-900/80 text-purple-300 border-purple-500/40 hover:border-purple-300'
+              }`}
+              title="Open Share Hub with public URL, QR code, email & text templates"
+            >
+              <Share2 className="w-3.5 h-3.5 text-purple-400" />
+              <span>{isLinkCopied ? 'SHARE LINK & QR' : 'SHARE APP LINK'}</span>
             </button>
 
             {/* Global Export Audit Data JSON Button */}
@@ -184,25 +259,57 @@ export function Header({
               <span>{isExported ? 'EXPORTED JSON' : 'EXPORT AUDIT DATA'}</span>
             </button>
 
-            {/* Audio Alert Toggle */}
+            {/* Global Theme Toggle (Dark / Light) */}
+            <button
+              id="btn-toggle-theme"
+              onClick={onToggleTheme}
+              className={`flex items-center gap-1.5 px-2.5 py-1 rounded border text-[9px] font-mono font-bold uppercase tracking-wider transition-all cursor-pointer ${
+                theme === 'light'
+                  ? 'bg-amber-100 hover:bg-amber-200 text-amber-900 border-amber-300 shadow-sm'
+                  : 'bg-zinc-950 hover:bg-zinc-900 text-zinc-300 hover:text-white border-white/10 hover:border-white/25'
+              }`}
+              title={theme === 'light' ? 'Switch to High-Contrast Dark Mode' : 'Switch to High-Contrast Light Mode'}
+            >
+              {theme === 'light' ? (
+                <>
+                  <Sun className="w-3.5 h-3.5 text-amber-600" />
+                  <span>LIGHT THEME</span>
+                </>
+              ) : (
+                <>
+                  <Moon className="w-3.5 h-3.5 text-zinc-400" />
+                  <span>DARK THEME</span>
+                </>
+              )}
+            </button>
+
+            {/* Global Sound Mute Toggle */}
             <button
               id="btn-toggle-audio-alerts"
               onClick={handleToggleMute}
               className={`flex items-center gap-1.5 px-2.5 py-1 rounded border text-[9px] font-mono font-bold uppercase tracking-wider transition-all cursor-pointer ${
                 !isMuted
-                  ? 'bg-emerald-950/60 border-[#00FF00]/40 text-[#00FF00] hover:border-[#00FF00]'
+                  ? theme === 'light'
+                    ? 'bg-emerald-100 hover:bg-emerald-200 border-emerald-300 text-emerald-900 shadow-sm'
+                    : 'bg-emerald-950/60 border-[#00FF00]/40 text-[#00FF00] hover:border-[#00FF00]'
+                  : theme === 'light'
+                  ? 'bg-zinc-100 hover:bg-zinc-200 border-zinc-300 text-zinc-600'
                   : 'bg-zinc-950 border-white/10 text-zinc-500 hover:text-white'
               }`}
-              title={isMuted ? 'Unmute Web Audio alert chimes' : 'Mute Web Audio alert chimes'}
+              title={
+                isMuted
+                  ? 'Auditory alerts are muted. Click to enable sound notifications for critical status changes and safeguard triggers.'
+                  : 'Auditory alerts are active. Click to mute sound notifications for critical status changes and safeguard triggers.'
+              }
             >
               {!isMuted ? (
                 <>
-                  <Volume2 className="w-3.5 h-3.5 text-[#00FF00]" />
-                  <span>AUDIO ALERTS ON</span>
+                  <Volume2 className={`w-3.5 h-3.5 ${theme === 'light' ? 'text-emerald-700' : 'text-[#00FF00]'}`} />
+                  <span>AUDIO ON</span>
                 </>
               ) : (
                 <>
-                  <VolumeX className="w-3.5 h-3.5 text-zinc-500" />
+                  <VolumeX className={`w-3.5 h-3.5 ${theme === 'light' ? 'text-zinc-500' : 'text-zinc-500'}`} />
                   <span>AUDIO MUTED</span>
                 </>
               )}
@@ -211,13 +318,13 @@ export function Header({
         </div>
 
         {/* Global Real-Time Stats themed in stark dark styling */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 bg-zinc-950/80 p-3 rounded-xl border border-white/10 w-full lg:w-auto">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-4 bg-zinc-950/80 p-3.5 rounded-xl border border-white/10 w-full lg:w-auto shrink-0 min-w-fit">
           {/* Stat 1 */}
-          <div className="px-3 py-1" id="global-stat-connections">
-            <span className="text-[9px] text-zinc-500 font-bold uppercase tracking-widest block mb-1">
+          <div className="px-3 py-1 min-w-[115px]" id="global-stat-connections">
+            <span className="text-[9px] text-zinc-500 font-bold uppercase tracking-widest block mb-1 whitespace-nowrap">
               AUDITED CONNS
             </span>
-            <div className="flex items-center gap-1.5">
+            <div className="flex items-center gap-1.5 whitespace-nowrap">
               <Activity className="w-3.5 h-3.5 text-zinc-400 shrink-0" />
               <span className="text-sm font-black font-mono text-white tracking-tight">
                 {totalConnections.toLocaleString()}
@@ -226,11 +333,11 @@ export function Header({
           </div>
 
           {/* Stat 2 */}
-          <div className="px-3 py-1 border-l border-white/10" id="global-stat-verified">
-            <span className="text-[9px] text-zinc-500 font-bold uppercase tracking-widest block mb-1">
+          <div className="px-3 py-1 min-w-[115px] border-l border-white/10" id="global-stat-verified">
+            <span className="text-[9px] text-zinc-500 font-bold uppercase tracking-widest block mb-1 whitespace-nowrap">
               HUMAN TOKENS
             </span>
-            <div className="flex items-center gap-1.5">
+            <div className="flex items-center gap-1.5 whitespace-nowrap">
               <Shield className="w-3.5 h-3.5 text-[#00FF00] shrink-0" />
               <span className="text-sm font-black font-mono text-white tracking-tight">
                 {totalVerified.toLocaleString()}
@@ -239,11 +346,11 @@ export function Header({
           </div>
 
           {/* Stat 3 */}
-          <div className="px-3 py-1 border-l border-white/10" id="global-stat-ratio">
-            <span className="text-[9px] text-zinc-500 font-bold uppercase tracking-widest block mb-1">
+          <div className="px-3 py-1 min-w-[115px] border-l border-white/10" id="global-stat-ratio">
+            <span className="text-[9px] text-zinc-500 font-bold uppercase tracking-widest block mb-1 whitespace-nowrap">
               GLOBAL RATIO
             </span>
-            <div className="flex items-center gap-1.5">
+            <div className="flex items-center gap-1.5 whitespace-nowrap">
               <span
                 className={`text-sm font-black font-mono tracking-tight ${
                   globalRatio >= 50 ? 'text-[#00FF00]' : 'text-rose-500'
@@ -255,11 +362,11 @@ export function Header({
           </div>
 
           {/* Stat 4 */}
-          <div className="px-3 py-1 border-l border-white/10" id="global-stat-safeguards">
-            <span className="text-[9px] text-zinc-500 font-bold uppercase tracking-widest block mb-1">
+          <div className="px-3 py-1 min-w-[115px] border-l border-white/10" id="global-stat-safeguards">
+            <span className="text-[9px] text-zinc-500 font-bold uppercase tracking-widest block mb-1 whitespace-nowrap">
               LOCKDOWNS
             </span>
-            <div className="flex items-center gap-1.5">
+            <div className="flex items-center gap-1.5 whitespace-nowrap">
               <AlertTriangle
                 className={`w-3.5 h-3.5 shrink-0 ${redCount > 0 ? 'text-rose-400 animate-pulse' : 'text-zinc-500'}`}
               />

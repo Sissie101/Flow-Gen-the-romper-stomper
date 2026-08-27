@@ -6,15 +6,201 @@
   --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
 }
 
+/* Base Theme Tokens */
+:root {
+  --app-bg: #050505;
+  --app-text: #ffffff;
+  --panel-bg: #000000;
+  --card-bg: #09090b;
+  --card-border: rgba(255, 255, 255, 0.1);
+  --accent-neon: #00ff00;
+  --accent-rose: #f43f5e;
+}
+
+html.light,
+[data-theme="light"] {
+  --app-bg: #f4f6f9;
+  --app-text: #09090b;
+  --panel-bg: #ffffff;
+  --card-bg: #ffffff;
+  --card-border: #e2e8f0;
+  --accent-neon: #16a34a;
+  --accent-rose: #e11d48;
+  color-scheme: light;
+}
+
 /* Custom styles for high-fidelity Bold Typography design */
 body {
   background-color: #050505; /* Pitch black */
   color: #ffffff; /* Stark white */
   font-family: var(--font-sans);
   overflow-x: hidden;
+  transition: background-color 0.2s ease, color 0.2s ease;
 }
 
-/* Scrollbar styling matching the stark dark theme */
+/* Light mode global overrides for high-contrast presentation */
+html.light body {
+  background-color: #f4f6f9;
+  color: #09090b;
+}
+
+html.light #flowgen-app {
+  background-color: #f4f6f9 !important;
+  color: #09090b !important;
+}
+
+html.light header#app-header {
+  background-color: #ffffff !important;
+  border-color: #e2e8f0 !important;
+}
+
+html.light section#directory-panel,
+html.light section#audit-workspace,
+html.light section#chat-auditor-panel,
+html.light section#simulator-panel,
+html.light section#threat-distribution-panel,
+html.light section#sensitivity-panel,
+html.light section#audit-logs-panel {
+  background-color: #ffffff !important;
+  border-color: #e2e8f0 !important;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 1px 2px -1px rgba(0, 0, 0, 0.05) !important;
+}
+
+html.light .bg-black {
+  background-color: #ffffff !important;
+}
+
+html.light .bg-zinc-950,
+html.light .bg-\[\#050505\] {
+  background-color: #ffffff !important;
+}
+
+html.light .bg-zinc-900 {
+  background-color: #f8fafc !important;
+}
+
+html.light .bg-zinc-900\/80,
+html.light .bg-zinc-900\/50,
+html.light .bg-zinc-950\/80,
+html.light .bg-zinc-950\/90,
+html.light .bg-zinc-950\/60 {
+  background-color: #f1f5f9 !important;
+}
+
+html.light .bg-zinc-800 {
+  background-color: #e2e8f0 !important;
+}
+
+html.light .text-white {
+  color: #09090b !important;
+}
+
+html.light .text-zinc-200 {
+  color: #1e293b !important;
+}
+
+html.light .text-zinc-300 {
+  color: #334155 !important;
+}
+
+html.light .text-zinc-400 {
+  color: #475569 !important;
+}
+
+html.light .text-zinc-500 {
+  color: #64748b !important;
+}
+
+html.light .border-white\/10,
+html.light .border-white\/15,
+html.light .border-white\/20,
+html.light .border-zinc-800,
+html.light .border-zinc-900 {
+  border-color: #e2e8f0 !important;
+}
+
+html.light .border-zinc-700 {
+  border-color: #cbd5e1 !important;
+}
+
+html.light input,
+html.light select,
+html.light textarea {
+  background-color: #f8fafc !important;
+  color: #09090b !important;
+  border-color: #cbd5e1 !important;
+}
+
+html.light input::placeholder,
+html.light textarea::placeholder {
+  color: #94a3b8 !important;
+}
+
+/* Light mode high-contrast green accents */
+html.light .text-\[\#00FF00\] {
+  color: #15803d !important;
+}
+
+html.light .border-\[\#00FF00\]\/40 {
+  border-color: rgba(22, 163, 74, 0.45) !important;
+}
+
+html.light .bg-\[\#00FF00\]\/10,
+html.light .bg-\[\#00FF00\]\/15 {
+  background-color: rgba(22, 163, 74, 0.1) !important;
+}
+
+html.light .bg-emerald-950\/40,
+html.light .bg-emerald-950\/60,
+html.light .bg-emerald-950\/30 {
+  background-color: rgba(22, 163, 74, 0.1) !important;
+}
+
+html.light .text-emerald-300,
+html.light .text-emerald-400 {
+  color: #15803d !important;
+}
+
+html.light .border-emerald-500\/40,
+html.light .border-emerald-500\/30 {
+  border-color: rgba(22, 163, 74, 0.35) !important;
+}
+
+/* Light mode high-contrast red accents */
+html.light .bg-rose-950\/40,
+html.light .bg-rose-950\/60,
+html.light .bg-rose-950\/30,
+html.light .bg-rose-950\/95 {
+  background-color: #ffe4e6 !important;
+}
+
+html.light .text-rose-400,
+html.light .text-rose-300 {
+  color: #be123c !important;
+}
+
+html.light .border-rose-500\/40,
+html.light .border-rose-500\/60,
+html.light .border-rose-500\/80 {
+  border-color: #fda4af !important;
+}
+
+/* Light mode cyan / blue accents */
+html.light .bg-cyan-950\/40,
+html.light .bg-cyan-950\/60 {
+  background-color: #e0f2fe !important;
+}
+
+html.light .text-cyan-300,
+html.light .text-cyan-400 {
+  color: #0369a1 !important;
+}
+
+html.light .border-cyan-500\/40 {
+  border-color: #7dd3fc !important;
+}
+
+/* Scrollbar styling matching the theme */
 .scrollbar-thin::-webkit-scrollbar {
   width: 5px;
 }
@@ -29,6 +215,16 @@ body {
   background: rgba(255, 255, 255, 0.3);
 }
 
+html.light .scrollbar-thin::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.04);
+}
+html.light .scrollbar-thin::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.2);
+}
+html.light .scrollbar-thin::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.35);
+}
+
 /* Marquee ticker custom styles */
 @keyframes ticker {
   0% { transform: translate3d(0, 0, 0); }
@@ -40,5 +236,22 @@ body {
   white-space: nowrap;
   animation: ticker 25s linear infinite;
 }
+
+/* Hot pink pulsing shadow animation for low authorized ratio streams */
+@keyframes hotPinkPulse {
+  0%, 100% {
+    box-shadow: 0 0 15px rgba(255, 20, 147, 0.4), inset 0 0 10px rgba(255, 20, 147, 0.2);
+    border-color: rgba(255, 20, 147, 0.7);
+  }
+  50% {
+    box-shadow: 0 0 35px rgba(255, 20, 147, 0.9), 0 0 55px rgba(255, 105, 180, 0.6), inset 0 0 20px rgba(255, 20, 147, 0.4);
+    border-color: rgba(255, 105, 180, 1);
+  }
+}
+
+.animate-hot-pink-pulse {
+  animation: hotPinkPulse 1.5s ease-in-out infinite;
+}
+
 
 

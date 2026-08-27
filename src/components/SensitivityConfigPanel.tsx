@@ -51,7 +51,7 @@ export function SensitivityConfigPanel({
   return (
     <div
       id="sensitivity-config-panel"
-      className="p-6 rounded-2xl border border-white/10 bg-black flex flex-col transition-all font-mono"
+      className="p-6 rounded-2xl border border-white/10 bg-black flex flex-col shrink-0 transition-all font-mono"
     >
       {/* Panel Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center pb-4 border-b border-white/10 gap-4 shrink-0">

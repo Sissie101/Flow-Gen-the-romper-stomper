@@ -64,9 +64,15 @@ export function SecurityGovernanceModal({
   if (!isOpen) return null;
 
   const handleCopyKeyFingerprint = () => {
-    navigator.clipboard.writeText('SHA256:8f99a12bc443e0988f12a99304bd821ee328f410');
-    setCopiedKey(true);
-    setTimeout(() => setCopiedKey(false), 2000);
+    if (navigator.clipboard) {
+      navigator.clipboard
+        .writeText('SHA256:8f99a12bc443e0988f12a99304bd821ee328f410')
+        .then(() => {
+          setCopiedKey(true);
+          setTimeout(() => setCopiedKey(false), 2000);
+        })
+        .catch(() => {});
+    }
   };
 
   const handleRotateKey = () => {

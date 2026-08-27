@@ -1,7 +1,19 @@
 // Web Audio API Sound Synthesizer for FlowGen Threat Notifications
 
 let audioCtx: AudioContext | null = null;
-let isAudioMuted = false;
+let isAudioMuted: boolean = (() => {
+  if (typeof window !== 'undefined') {
+    try {
+      const saved = localStorage.getItem('flowgen_audio_muted');
+      if (saved !== null) {
+        return saved === 'true';
+      }
+    } catch {
+      // Ignore storage errors
+    }
+  }
+  return false;
+})();
 
 function getAudioContext(): AudioContext | null {
   if (typeof window === 'undefined') return null;
@@ -19,6 +31,13 @@ function getAudioContext(): AudioContext | null {
 
 export function setAudioMuted(muted: boolean) {
   isAudioMuted = muted;
+  if (typeof window !== 'undefined') {
+    try {
+      localStorage.setItem('flowgen_audio_muted', String(muted));
+    } catch {
+      // Ignore
+    }
+  }
 }
 
 export function getAudioMuted(): boolean {

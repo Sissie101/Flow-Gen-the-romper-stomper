@@ -426,7 +426,7 @@ export function GlobalThreatDistribution({
   return (
     <div
       id="global-threat-distribution-card"
-      className="p-6 rounded-2xl border border-white/10 bg-black flex flex-col font-mono relative overflow-hidden"
+      className="p-6 rounded-2xl border border-white/10 bg-black flex flex-col shrink-0 font-mono relative overflow-hidden"
     >
       {/* Widget Header */}
       <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center pb-4 border-b border-white/10 gap-4 shrink-0">

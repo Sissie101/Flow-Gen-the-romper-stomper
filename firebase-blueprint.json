@@ -1,0 +1,64 @@
+{
+  "entities": {
+    "userProfile": {
+      "title": "UserProfile",
+      "description": "User profile with display information, role, and custom settings",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string", "description": "Unique Google Auth User ID" },
+        "email": { "type": "string", "description": "User email address" },
+        "displayName": { "type": "string", "description": "Display name of the user" },
+        "role": { "type": "string", "enum": ["admin", "auditor", "viewer"], "description": "Access control role" },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Creation timestamp" },
+        "updatedAt": { "type": "string", "format": "date-time", "description": "Last updated timestamp" }
+      },
+      "required": ["userId", "email", "role"]
+    },
+    "auditChannel": {
+      "title": "AuditChannel",
+      "description": "Stream channel tracked for viewbotting and hype ratio auditing",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Unique channel identifier" },
+        "ownerId": { "type": "string", "description": "User ID who owns/created the channel" },
+        "title": { "type": "string", "maxLength": 200, "description": "Channel or Stream title" },
+        "platform": { "type": "string", "enum": ["whatnot", "tiktok", "twitch", "youtube", "custom"], "description": "Livestream platform" },
+        "totalViews": { "type": "number", "description": "Reported concurrent view count" },
+        "authenticatedViewers": { "type": "number", "description": "Verified concurrent users" },
+        "hypeScore": { "type": "number", "description": "Hype score between 0.0 and 1.0" },
+        "status": { "type": "string", "enum": ["normal", "flagged", "critical", "investigating"], "description": "Audit severity status" },
+        "updatedAt": { "type": "string", "format": "date-time", "description": "Timestamp of latest data sync" }
+      },
+      "required": ["id", "ownerId", "title", "platform", "totalViews", "authenticatedViewers", "hypeScore", "status"]
+    },
+    "creatorCampaign": {
+      "title": "CreatorCampaign",
+      "description": "Solo creator marketing campaign, buyer follow-ups and copy templates",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Unique campaign ID" },
+        "ownerId": { "type": "string", "description": "Creator User ID" },
+        "campaignName": { "type": "string", "maxLength": 200, "description": "Name of the campaign" },
+        "targetAudience": { "type": "string", "maxLength": 300, "description": "Target buyer demographic" },
+        "generatedCopy": { "type": "string", "maxLength": 5000, "description": "AI generated marketing copy" },
+        "category": { "type": "string", "enum": ["dm_followup", "chat_icebreaker", "vip_newsletter", "social_hook"], "description": "Marketing format type" },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Creation timestamp" }
+      },
+      "required": ["id", "ownerId", "campaignName", "category", "generatedCopy"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "userProfile",
+      "description": "User profile records with role and preferences"
+    },
+    "/users/{userId}/channels/{channelId}": {
+      "schema": "auditChannel",
+      "description": "User's monitored streaming channels and viewbot metrics"
+    },
+    "/users/{userId}/campaigns/{campaignId}": {
+      "schema": "creatorCampaign",
+      "description": "User's saved solo marketing campaigns and follow-up templates"
+    }
+  }
+}

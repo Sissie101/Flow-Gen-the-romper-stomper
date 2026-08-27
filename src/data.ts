@@ -384,12 +384,39 @@ export function generateHistory(currentViewers: number, verifiedHumans: number):
     const baseTotal = Math.round(organicBaselineTotal * baseNoise);
     const baseHumans = Math.round(organicBaselineHumans * baseNoise);
 
+    // Identify if this historical point represents an attack event
+    let attackEvent = undefined;
+    if (isSpiked) {
+      if (i === 6) {
+        attackEvent = {
+          id: `hist-bot-${timeStr}`,
+          type: 'bot_spike' as const,
+          title: 'BOT DEPLOYMENT SURGE',
+          detail: `Coordinated injection of ~${(currentViewers - verifiedHumans).toLocaleString()} unauthenticated headless connections.`,
+          magnitude: `+${Math.round((currentViewers - verifiedHumans) * 0.9).toLocaleString()} Bots`,
+          severity: 'critical' as const,
+          timestamp: timeStr,
+        };
+      } else if (i === 3) {
+        attackEvent = {
+          id: `hist-sybil-${timeStr}`,
+          type: 'sybil_cluster' as const,
+          title: 'SYBIL CLUSTER BURST',
+          detail: 'High-velocity socket handshake burst detected matching automated botnet signature.',
+          magnitude: 'Anomalous Velocity',
+          severity: 'high' as const,
+          timestamp: timeStr,
+        };
+      }
+    }
+
     points.push({
       time: timeStr,
       viewers: Math.max(viewCount, humanCount),
       verifiedHumans: Math.min(humanCount, viewCount),
       baselineViewers: Math.max(baseTotal, baseHumans),
       baselineVerifiedHumans: Math.min(baseHumans, baseTotal),
+      attackEvent,
     });
   }
   

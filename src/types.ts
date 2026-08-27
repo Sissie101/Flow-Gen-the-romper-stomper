@@ -55,12 +55,23 @@ export interface GovernancePolicy {
   immutableLoggingEnabled: boolean;
 }
 
+export interface AttackEvent {
+  id: string;
+  type: 'bot_spike' | 'fomo_hype' | 'sybil_cluster' | 'credential_stuffing' | 'traffic_surge';
+  title: string;
+  detail: string;
+  severity: 'critical' | 'high' | 'medium';
+  magnitude?: string; // e.g. "+4,500 Bots"
+  timestamp?: string;
+}
+
 export interface HistoryPoint {
   time: string;
   viewers: number;
   verifiedHumans: number;
   baselineViewers?: number;
   baselineVerifiedHumans?: number;
+  attackEvent?: AttackEvent;
 }
 
 export interface ThresholdSettings {
@@ -116,5 +127,41 @@ export interface CopilotRule {
   suppressDiscovery: boolean;
   enabled: boolean;
   assignedRole: string;
+}
+
+export type ThemeMode = 'dark' | 'light';
+
+export interface StandardSheetRow {
+  id: string;
+  colA_eventTitle: string; // Col A: Event Title (e.g. "MEGASAVE FLASH DEALS")
+  colB_accountId: string;  // Col B: Account ID (e.g. "CHAZ & BRENDA")
+  colC_hypeScore: number;  // Col C: Hype Score (Decimal e.g. 0.28 for 28%)
+  colD_views: number;      // Col D: Views (Integer e.g. 15000)
+  colE_timestamp: string;  // Col E: Timestamp (ISO format)
+  colF_rawText: string;    // Col F: Raw Text (Chat log / transcript)
+  sentiment?: string;
+  botRisk?: string;
+  analyzedByGemini?: boolean;
+}
+
+export interface StreamAiAnalysisResult {
+  hypeScore: number;
+  sentiment: string;
+  botRiskAssessment: string;
+  genuineBuyerSignals: string[];
+  suggestedSoloCreatorTalkTrack: string;
+  suggestedEngagementQuestion: string;
+  topKeywords: string[];
+  source: string;
+}
+
+export interface SoloMarketingBundle {
+  headline: string;
+  dmFollowUp: string;
+  liveChatIcebreaker: string;
+  emailBroadcast: string;
+  socialHook: string;
+  conversionTip: string;
+  source: string;
 }
 
