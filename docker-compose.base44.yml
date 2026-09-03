@@ -1,0 +1,45 @@
+services:
+  app:
+    image: node:22-slim
+    working_dir: /app
+    volumes:
+      - ./:/app
+      - node_modules:/app/node_modules
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=development
+      - DISABLE_HMR=true
+      - BASE44_PUBLIC_HOST_SUFFIX=${BASE44_PUBLIC_HOST_SUFFIX}
+    env_file:
+      - ./.env.base44-defaults
+      - /run/base44/app.env
+    command: sh -c "npm install --no-audit --no-fund && npx tsx server.ts"
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://localhost:3000/api/health').then(r=>{if(!r.ok)throw 0}).catch(()=>process.exit(1))"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+    restart: unless-stopped
+
+  monitor:
+    image: curlimages/curl:8.10.1
+    depends_on:
+      app:
+        condition: service_healthy
+    volumes:
+      - ./monitor:/monitor:ro
+    environment:
+      - APP_URL=http://app:3000/api/health
+      - CHECK_INTERVAL=30
+      - FAIL_THRESHOLD=3
+      - ALERT_WEBHOOK_URL=${ALERT_WEBHOOK_URL:-}
+    env_file:
+      - /run/base44/app.env
+    entrypoint: /bin/sh
+    command: /monitor/health-check.sh
+    restart: unless-stopped
+
+volumes:
+  node_modules:
