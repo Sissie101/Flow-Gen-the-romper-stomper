@@ -33,6 +33,7 @@ import { SoloMarketingHubModal } from './components/SoloMarketingHubModal';
 import { GoogleSheetsStandardSyncModal } from './components/GoogleSheetsStandardSyncModal';
 import { ShareAppModal } from './components/ShareAppModal';
 import { FirebaseSyncModal } from './components/FirebaseSyncModal';
+import { ProjectTemplatesModal } from './components/ProjectTemplatesModal';
 import { testConnection } from './firebase';
 import { MicrosoftTask, CopilotAgentConfig, CopilotRule } from './types';
 import {
@@ -71,6 +72,7 @@ import {
   X,
   HeartHandshake,
   FileSpreadsheet,
+  LayoutTemplate,
 } from 'lucide-react';
 
 const INITIAL_COPILOT_RULES: CopilotRule[] = [
@@ -210,6 +212,7 @@ export default function App() {
   const [isGoogleSheetsStandardOpen, setIsGoogleSheetsStandardOpen] = useState<boolean>(false);
   const [isShareModalOpen, setIsShareModalOpen] = useState<boolean>(false);
   const [isFirebaseModalOpen, setIsFirebaseModalOpen] = useState<boolean>(false);
+  const [isTemplatesModalOpen, setIsTemplatesModalOpen] = useState<boolean>(false);
   const [msTasks, setMsTasks] = useState<MicrosoftTask[]>(INITIAL_MS_TASKS);
   const [taskDispatchedToast, setTaskDispatchedToast] = useState<string | null>(null);
   const [copilotConfig, setCopilotConfig] = useState<CopilotAgentConfig>({
@@ -1293,6 +1296,19 @@ export default function App() {
             </div>
             
             <div className="flex items-center gap-2">
+              <button
+                id="btn-open-templates-modal-directory"
+                onClick={() => setIsTemplatesModalOpen(true)}
+                className={`text-[9px] font-bold uppercase tracking-wider flex items-center gap-1 px-2.5 py-1.5 rounded transition-all cursor-pointer shadow-sm border ${
+                  theme === 'light'
+                    ? 'text-indigo-700 bg-indigo-50 border-indigo-300 hover:bg-indigo-100 hover:border-indigo-500'
+                    : 'text-indigo-400 hover:text-white border-indigo-400/40 hover:border-indigo-400 bg-indigo-500/10'
+                }`}
+                title="Start a new stream from a pre-built template"
+              >
+                <LayoutTemplate className={`w-3 h-3 ${theme === 'light' ? 'text-indigo-600' : 'text-indigo-400'}`} /> TEMPLATES
+              </button>
+
               <button
                 id="btn-open-marketplace-modal-directory"
                 onClick={() => setIsMarketplaceModalOpen(true)}
@@ -2471,6 +2487,14 @@ export default function App() {
         isOpen={isFirebaseModalOpen}
         onClose={() => setIsFirebaseModalOpen(false)}
         channels={channels}
+        theme={theme}
+      />
+
+      {/* Project Templates Modal */}
+      <ProjectTemplatesModal
+        isOpen={isTemplatesModalOpen}
+        onClose={() => setIsTemplatesModalOpen(false)}
+        onSpawnTemplate={handleAddMarketplaceChannel}
         theme={theme}
       />
 
