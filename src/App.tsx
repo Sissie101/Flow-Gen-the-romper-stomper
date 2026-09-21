@@ -34,6 +34,7 @@ import { GoogleSheetsStandardSyncModal } from './components/GoogleSheetsStandard
 import { ShareAppModal } from './components/ShareAppModal';
 import { FirebaseSyncModal } from './components/FirebaseSyncModal';
 import { ProjectTemplatesModal } from './components/ProjectTemplatesModal';
+import { ModDashboardView } from './components/ModDashboardView';
 import { testConnection } from './firebase';
 import { MicrosoftTask, CopilotAgentConfig, CopilotRule } from './types';
 import {
@@ -73,6 +74,7 @@ import {
   HeartHandshake,
   FileSpreadsheet,
   LayoutTemplate,
+  LayoutDashboard,
 } from 'lucide-react';
 
 const INITIAL_COPILOT_RULES: CopilotRule[] = [
@@ -213,6 +215,7 @@ export default function App() {
   const [isShareModalOpen, setIsShareModalOpen] = useState<boolean>(false);
   const [isFirebaseModalOpen, setIsFirebaseModalOpen] = useState<boolean>(false);
   const [isTemplatesModalOpen, setIsTemplatesModalOpen] = useState<boolean>(false);
+  const [viewMode, setViewMode] = useState<'dashboard' | 'console'>('console');
   const [msTasks, setMsTasks] = useState<MicrosoftTask[]>(INITIAL_MS_TASKS);
   const [taskDispatchedToast, setTaskDispatchedToast] = useState<string | null>(null);
   const [copilotConfig, setCopilotConfig] = useState<CopilotAgentConfig>({
@@ -1223,7 +1226,7 @@ export default function App() {
   ).length;
   const recentHypeEventsCount = Math.max(
     hypeEventsFromHistory,
-    selectedChannel && (selectedChannel.urgencyScore > 60 || selectedChannel.fomoScore > 60) ? 1 : hypeEventsFromLogs > 0 ? 1 : 0
+    selectedChannel && selectedChannel.urgencyScore > 60 ? 1 : hypeEventsFromLogs > 0 ? 1 : 0
   );
 
   const totalRecentIncidents = recentBotAttacksCount + recentHypeEventsCount;
@@ -1282,8 +1285,60 @@ export default function App() {
         </div>
       )}
 
+      {/* View Mode Toggle Bar */}
+      <div className="max-w-7xl w-full mx-auto px-4 md:px-6 pt-4 flex items-center gap-2">
+        <button
+          id="btn-view-dashboard"
+          onClick={() => setViewMode('dashboard')}
+          className={`flex items-center gap-1.5 px-4 py-2 rounded-lg border text-[10px] font-black uppercase tracking-wider transition-all cursor-pointer ${
+            viewMode === 'dashboard'
+              ? theme === 'light'
+                ? 'bg-zinc-900 text-white border-zinc-900 shadow-sm'
+                : 'bg-white text-black border-white'
+              : theme === 'light'
+              ? 'bg-white text-zinc-600 border-zinc-200 hover:border-zinc-400'
+              : 'bg-zinc-950 text-zinc-500 border-white/10 hover:text-zinc-300 hover:border-white/20'
+          }`}
+        >
+          <LayoutDashboard className="w-3.5 h-3.5" />
+          DASHBOARD
+        </button>
+        <button
+          id="btn-view-console"
+          onClick={() => setViewMode('console')}
+          className={`flex items-center gap-1.5 px-4 py-2 rounded-lg border text-[10px] font-black uppercase tracking-wider transition-all cursor-pointer ${
+            viewMode === 'console'
+              ? theme === 'light'
+                ? 'bg-zinc-900 text-white border-zinc-900 shadow-sm'
+                : 'bg-white text-black border-white'
+              : theme === 'light'
+              ? 'bg-white text-zinc-600 border-zinc-200 hover:border-zinc-400'
+              : 'bg-zinc-950 text-zinc-500 border-white/10 hover:text-zinc-300 hover:border-white/20'
+          }`}
+        >
+          <Activity className="w-3.5 h-3.5" />
+          STREAM CONSOLE
+        </button>
+      </div>
+
+      {/* Dashboard View */}
+      {viewMode === 'dashboard' && (
+        <div className="max-w-7xl w-full mx-auto p-4 md:p-6 pt-4">
+          <ModDashboardView
+            channels={channels}
+            chatMessages={chatMessages}
+            auditLogs={auditLogs}
+            thresholdSettings={thresholdSettings}
+            theme={theme}
+            selectedChannelId={selectedChannelId}
+            onSelectChannel={setSelectedChannelId}
+            onSwitchToConsole={() => setViewMode('console')}
+          />
+        </div>
+      )}
+
       {/* Main Workspace Grid */}
-      <main className="flex-1 max-w-7xl w-full mx-auto p-4 md:p-6 grid grid-cols-1 lg:grid-cols-12 gap-6 min-h-0">
+      <main className={`flex-1 max-w-7xl w-full mx-auto p-4 md:p-6 grid grid-cols-1 lg:grid-cols-12 gap-6 min-h-0 ${viewMode === 'dashboard' ? 'hidden' : ''}`}>
         
         {/* LEFT COLUMN: Channels Directory (span 4) */}
         <section id="directory-panel" className={`lg:col-span-4 flex flex-col gap-4 rounded-2xl border p-5 h-[calc(100vh-140px)] min-h-[500px] transition-colors ${
